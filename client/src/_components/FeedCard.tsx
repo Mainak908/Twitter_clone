@@ -14,7 +14,7 @@ const FeedCard = () => {
               alt="nothing"
               height={50}
               width={50}
-              className="rounded-full"
+              className="rounded-full pt-1"
             />
           </div>
           <div className="col-span-11 ">
