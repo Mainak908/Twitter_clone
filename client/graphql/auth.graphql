@@ -1,0 +1,19 @@
+query verifyUserGoogleToken($token: String!) {
+  verifyGoogleToken(token: $token)
+}
+
+query GetCurrentUser {
+  getCurrentUser {
+    id
+    email
+    firstName
+    lastName
+    profileImgUrl
+    recommendedUsers {
+      firstName
+      profileImgUrl
+      id
+      lastName
+    }
+  }
+}

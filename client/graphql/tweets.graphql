@@ -1,0 +1,57 @@
+query GetAllTweetsQuery {
+  getAllTweets {
+    id
+    content
+    imageURL
+    author {
+      firstName
+      lastName
+      profileImgUrl
+    }
+  }
+}
+
+query GetAllTweetsOfUserQuery($userId: ID!) {
+  getUserById(userId: $userId) {
+    firstName
+    email
+    lastName
+    profileImgUrl
+    id
+    tweets {
+      content
+      id
+      author {
+        firstName
+        profileImgUrl
+      }
+    }
+    followers {
+      firstName
+    }
+
+    following {
+      firstName
+    }
+  }
+}
+
+query getSignedURLForTweetQuery($imageType: String!, $imageName: String!) {
+  getSignedURLForTweet(imageType: $imageType, imageName: $imageName)
+}
+
+mutation createTweetMutation($payload: CreateTweetData!) {
+  createTweet(payload: $payload) {
+    id
+    content
+    imageURL
+  }
+}
+
+mutation followUserMutation($to: ID!) {
+  followUser(to: $to)
+}
+
+mutation unfollowUserMutation($to: ID!) {
+  unfollowUser(to: $to)
+}

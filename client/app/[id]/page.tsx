@@ -1,0 +1,74 @@
+import { BsArrowLeftShort } from "react-icons/bs";
+import React from "react";
+import UnfollowBtn from "@/components/UnfollowBtn";
+import { graphqlClient } from "@/clients/api";
+import {
+  GetAllTweetsOfUserQueryDocument,
+  GetAllTweetsOfUserQueryQuery,
+  GetAllTweetsOfUserQueryQueryVariables,
+  Tweet,
+} from "@/gql/graphql";
+import FeedCard from "@/components/FeedCard";
+import Image from "next/image";
+import LeftBar from "@/components/LeftBar";
+
+const UserProfilePage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id: userId } = await params;
+
+  const { getUserById } = await graphqlClient.request<
+    GetAllTweetsOfUserQueryQuery,
+    GetAllTweetsOfUserQueryQueryVariables
+  >(GetAllTweetsOfUserQueryDocument, { userId });
+
+  return (
+    <div className="grid grid-cols-12 h-screen w-screen sm:px-56">
+      <LeftBar />
+
+      <div className="col-span-10 sm:col-span-5 border-r-[1px] border-l-[1px] h-screen overflow-auto  border-blue-600">
+        <nav className="flex items-center gap-3 py-3 px-3">
+          <BsArrowLeftShort className="text-4xl" />
+          <div>
+            <h1 className="text-2xl font-bold">
+              {getUserById?.firstName} {getUserById?.lastName}
+            </h1>
+            <h1 className="text-md font-bold text-slate-500">
+              {getUserById?.tweets?.length} Tweets
+            </h1>
+          </div>
+        </nav>
+        <div className="p-4 border-b border-slate-800">
+          {getUserById?.profileImgUrl && (
+            <Image
+              src={getUserById.profileImgUrl}
+              alt="user-image"
+              className="rounded-full"
+              width={100}
+              height={100}
+            />
+          )}
+          <h1 className="text-2xl font-bold mt-5">
+            {getUserById?.firstName} {getUserById?.lastName}
+          </h1>
+          <div className="flex justify-between items-center">
+            <div className="flex gap-4 mt-2 text-sm text-gray-400">
+              <span>{getUserById?.followers?.length} followers</span>
+              <span>{getUserById?.following?.length} following</span>
+            </div>
+            <UnfollowBtn userInfo={getUserById} />
+          </div>
+        </div>
+        <div>
+          {getUserById?.tweets?.map((tweet) => (
+            <FeedCard data={tweet as Tweet} key={tweet?.id} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfilePage;
