@@ -7,6 +7,7 @@ query GetAllTweetsQuery {
       firstName
       lastName
       profileImgUrl
+      id
     }
   }
 }
@@ -28,10 +29,14 @@ query GetAllTweetsOfUserQuery($userId: ID!) {
     }
     followers {
       firstName
+      lastName
+      id
     }
 
     following {
       firstName
+      lastName
+      id
     }
   }
 }

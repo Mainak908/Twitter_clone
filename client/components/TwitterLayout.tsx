@@ -44,10 +44,10 @@ const Twitterlayout: React.FC<TwitterlayoutProps> = ({ children }) => {
   }, []);
 
   return (
-    <div className="grid grid-cols-12 h-screen w-screen sm:px-56">
+    <div className="grid grid-cols-12 w-screen h-screen sm:px-56">
       <LeftBar />
 
-      <div className="col-span-10 sm:col-span-5 border-r-[1px] border-l-[1px] h-screen  border-blue-600">
+      <div className="col-span-10 sm:col-span-5 border-r-[1px] border-l-[1px]  border-blue-600">
         {children}
         {Tweets?.map((tweet) => (
           <FeedCard data={tweet} key={tweet?.id} />

@@ -28,7 +28,7 @@ const UserProfilePage = async ({
     <div className="grid grid-cols-12 h-screen w-screen sm:px-56">
       <LeftBar />
 
-      <div className="col-span-10 sm:col-span-5 border-r-[1px] border-l-[1px] h-screen overflow-auto  border-blue-600">
+      <div className="col-span-10 sm:col-span-5 border-r-[1px] border-l-[1px]  border-blue-600">
         <nav className="flex items-center gap-3 py-3 px-3">
           <BsArrowLeftShort className="text-4xl" />
           <div>

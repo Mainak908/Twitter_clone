@@ -69,7 +69,7 @@ const LeftBar = () => {
         </div>
       </div>
       {currentUser && (
-        <div className="absolute bottom-5 flex gap-2 items-center bg-slate-800 px-3 py-2 rounded-full">
+        <div className="absolute top-[700px] flex gap-2 items-center bg-slate-800 px-3 py-2 rounded-full">
           <Image
             className="rounded-full"
             src={currentUser.profileImgUrl}
