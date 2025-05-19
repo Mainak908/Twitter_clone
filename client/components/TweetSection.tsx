@@ -4,6 +4,8 @@ import { useLoggedInUser } from "@/hooks/user_check";
 import React, { useCallback, useState } from "react";
 import { BiImageAlt } from "react-icons/bi";
 import Image from "next/image";
+import { Loader2 } from "lucide-react";
+
 import { graphqlClient } from "@/clients/api";
 import {
   CreateTweetMutationDocument,
@@ -15,12 +17,14 @@ import {
 } from "@/gql/graphql";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "./ui/button";
 
 const TweetSection = () => {
   const { data: user, isLoading } = useLoggedInUser();
 
   const [content, setContent] = useState("");
   const [image, setImage] = useState<{ img: File; src: string }>();
+  const [loading, setloading] = useState(false);
 
   let imageURL: string;
 
@@ -45,6 +49,7 @@ const TweetSection = () => {
 
   async function handleCreateTweet() {
     let imageUrl: string | null = null;
+    setloading(true);
 
     if (image) {
       const { getSignedURLForTweet } = await graphqlClient.request<
@@ -81,15 +86,18 @@ const TweetSection = () => {
       },
     });
 
-    console.log(createTweet);
+    setloading(false);
+    setContent("");
+    setImage(undefined);
 
     toast.success("success");
     queryClient.invalidateQueries({ queryKey: ["allTweets"] });
   }
 
   if (isLoading) return <div>loading...</div>;
+
   return (
-    <div className="border border-r-0 border-l-0 border-b-0 border-gray-600 p-5 hover:bg-slate-900 transition-all cursor-pointer">
+    <div className="border border-r-0 border-l-0 border-b-0 border-gray-600 p-5 hover:bg-slate-900 transition-all">
       <div className="grid grid-cols-12 gap-3">
         <div className="col-span-1">
           {user?.profileImgUrl && (
@@ -114,13 +122,17 @@ const TweetSection = () => {
             <Image src={image.src} alt="tweet-image" width={300} height={300} />
           )}
           <div className="mt-2 flex justify-between items-center">
-            <BiImageAlt onClick={handleSelectImage} className="text-xl" />
-            <button
+            <BiImageAlt
+              onClick={handleSelectImage}
+              className="text-xl cursor-pointer"
+            />
+            <Button
               onClick={handleCreateTweet}
-              className="bg-[#1d9bf0] font-semibold text-sm py-2 px-4 rounded-full"
+              disabled={loading || !user}
+              className="bg-[#1d9bf0] font-semibold text-sm py-2 px-4 rounded-full cursor-pointer"
             >
-              Tweet
-            </button>
+              Tweet {loading && <Loader2 className="animate-spin" />}
+            </Button>
           </div>
         </div>
       </div>
