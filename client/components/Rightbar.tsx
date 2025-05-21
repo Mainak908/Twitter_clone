@@ -32,8 +32,9 @@ const Rightbar = () => {
     toast(verifyGoogleToken ? "success" : "failed");
     if (verifyGoogleToken) queryClient.invalidateQueries({ queryKey: ["me"] });
   }, []);
+
   return (
-    <div className="col-span-0 sm:col-span-3 p-5">
+    <div className="hidden lg:fixed lg:right-72 lg:pt-5 lg:block">
       {!user ? (
         <div className="p-5 bg-slate-700 rounded-lg">
           <h1 className="my-2 text-2xl">New to Twitter?</h1>

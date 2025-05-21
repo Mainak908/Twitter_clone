@@ -1,5 +1,6 @@
 import FeedCard from "./FeedCard";
 import LeftBar from "./LeftBar";
+import MobileFooter from "./mobileFooter";
 import Rightbar from "./Rightbar";
 import TweetSection from "./TweetSection";
 import { graphqlClient } from "@/clients/api";
@@ -16,9 +17,9 @@ const Twitterlayout = async () => {
   >(GetAllTweetsQueryDocument);
 
   return (
-    <div className="grid grid-cols-12 w-screen h-screen sm:px-56">
+    <div className="w-screen flex ">
       <LeftBar />
-      <div className="col-span-10 sm:col-span-5 border-r-[1px] border-l-[1px]  border-blue-600">
+      <div className=" border-r-[1px] border-l-[1px]  border-gray-600 mx-auto max-w-[550px]">
         <TweetSection />
         {Tweets?.map((tweet) => (
           <FeedCard data={tweet} key={tweet?.id} />
@@ -26,6 +27,7 @@ const Twitterlayout = async () => {
       </div>
 
       <Rightbar />
+      <MobileFooter />
     </div>
   );
 };
