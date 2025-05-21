@@ -11,6 +11,7 @@ import {
 import FeedCard from "@/components/FeedCard";
 import Image from "next/image";
 import LeftBar from "@/components/LeftBar";
+import Link from "next/link";
 
 const UserProfilePage = async ({
   params,
@@ -25,12 +26,15 @@ const UserProfilePage = async ({
   >(GetAllTweetsOfUserQueryDocument, { userId });
 
   return (
-    <div className="grid grid-cols-12 h-screen w-screen sm:px-56">
+    <div className=" w-screen flex ">
       <LeftBar />
 
-      <div className="col-span-10 sm:col-span-5 border-r-[1px] border-l-[1px]  border-blue-600">
+      <div className=" border-r-[1px] border-l-[1px]  border-gray-600 mx-auto max-w-[550px]">
         <nav className="flex items-center gap-3 py-3 px-3">
-          <BsArrowLeftShort className="text-4xl" />
+          <Link href={"/"}>
+            <BsArrowLeftShort className="text-4xl" />
+          </Link>
+
           <div>
             <h1 className="text-2xl font-bold">
               {getUserById?.firstName} {getUserById?.lastName}

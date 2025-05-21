@@ -16,8 +16,8 @@ import {
   GetSignedUrlForTweetQueryQueryVariables,
 } from "@/gql/graphql";
 import { toast } from "react-toastify";
-import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 
 const TweetSection = () => {
   const { data: user, isLoading } = useLoggedInUser();
@@ -25,6 +25,7 @@ const TweetSection = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState<{ img: File; src: string }>();
   const [loading, setloading] = useState(false);
+  const router = useRouter();
 
   let imageURL: string;
 
@@ -45,7 +46,6 @@ const TweetSection = () => {
       }
     };
   }, []);
-  const queryClient = useQueryClient();
 
   async function handleCreateTweet() {
     let imageUrl: string | null = null;
@@ -91,7 +91,7 @@ const TweetSection = () => {
     setImage(undefined);
 
     toast.success("success");
-    queryClient.invalidateQueries({ queryKey: ["allTweets"] });
+    router.refresh();
   }
 
   if (isLoading) return <div>loading...</div>;
