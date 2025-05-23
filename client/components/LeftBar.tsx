@@ -39,7 +39,7 @@ const LeftBar = () => {
   }, [currentUser?.id]);
 
   return (
-    <div className="lg:pt-1 lg:flex lg:fixed lg:left-72 hidden">
+    <div className="lg:pt-1 lg:flex lg:fixed lg:left-55 hidden">
       <div>
         <div className="text-2xl h-fit w-fit hover:bg-gray-800 rounded-full p-4 cursor-pointer transition-all">
           <BsTwitter />

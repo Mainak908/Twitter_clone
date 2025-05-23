@@ -34,7 +34,7 @@ const Rightbar = () => {
   }, []);
 
   return (
-    <div className="hidden lg:fixed lg:right-72 lg:pt-5 lg:block">
+    <div className="hidden lg:fixed lg:right-55 lg:pt-5 lg:block">
       {!user ? (
         <div className="p-5 bg-slate-700 rounded-lg">
           <h1 className="my-2 text-2xl">New to Twitter?</h1>

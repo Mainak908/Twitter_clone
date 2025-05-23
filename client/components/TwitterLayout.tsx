@@ -19,7 +19,7 @@ const Twitterlayout = async () => {
   return (
     <div className="w-screen flex ">
       <LeftBar />
-      <div className="border-r-[1px] border-l-[1px]  border-gray-600 mx-auto max-w-[550px]">
+      <div className="border-r-[1px] border-l-[1px]  border-gray-600 mx-auto max-w-[500px]">
         <div className="grid grid-cols-2 border-b-1 border-gray-600 ">
           <div className="col-span-1 py-3  hover:bg-slate-900 rounded shadow cursor-pointer flex justify-center">
             <p className="font-semibold">For you</p>
