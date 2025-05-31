@@ -10,7 +10,7 @@ export default function MobileFooter() {
 
   const redirectfn = () => {
     if (!currentUser) return toast("login first");
-    router.push(currentUser.id);
+    router.push(`${currentUser.username}`);
   };
   return (
     <div className="fixed bottom-0 left-0 w-full bg-[var(--background)] text-white flex justify-around items-center py-3 sm:hidden z-50 border-t border-gray-700 rounded-sm">

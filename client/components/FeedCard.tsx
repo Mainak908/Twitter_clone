@@ -93,13 +93,20 @@ const FeedCard = ({ data }: { data: Tweet }) => {
               alt="user-image"
               height={50}
               width={50}
+              onClick={(e) => {
+                router.push(data.author.username);
+                e.stopPropagation();
+              }}
             />
           )}
         </div>
         <div className="col-span-11">
           <div className="flex gap-2">
             <h5>
-              <Link href={`/${data.author?.username}`}>
+              <Link
+                href={`/${data.author?.username}`}
+                onClick={(e) => e.stopPropagation()}
+              >
                 {data.author?.firstName} {data.author?.lastName}
               </Link>
             </h5>

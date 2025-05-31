@@ -58,6 +58,11 @@ function CommentItem({ comment }: { comment: Ctype }) {
     if (LikeTweet) queryClient.invalidateQueries({ queryKey: ["oneTweet"] });
   };
 
+  const myFunction = <T extends React.MouseEvent<any>>(e: T) => {
+    router.push(`/${comment.author.username}`);
+    e.stopPropagation();
+  };
+
   return (
     <div
       className=" mt-4 w-full hover:bg-slate-900 p-2 "
@@ -73,11 +78,15 @@ function CommentItem({ comment }: { comment: Ctype }) {
             src={comment.author.profileImgUrl}
             alt={" "}
             className="w-10 h-10 rounded-full"
+            onClick={(e) => myFunction(e)}
           />
           <div>
             <div className="flex items-center gap-2 text-sm">
-              <span className="font-semibold">{comment.author.firstName}</span>
-              <span className="text-gray-500">
+              <span className="font-semibold" onClick={(e) => myFunction(e)}>
+                {comment.author.firstName} {comment.author.lastName}
+              </span>
+
+              <span className="text-gray-500" onClick={(e) => myFunction(e)}>
                 {comment.author.username} .{" "}
                 {new Date(parseInt(comment.createdAt)).toDateString()}
               </span>

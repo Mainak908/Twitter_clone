@@ -14,12 +14,14 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { IoIosHeart } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 type Dtype = GetOneTweetDetailsQueryQuery["getOneTweetDetails"];
 
 export default function TweetCard({ data }: { data: Dtype }) {
   const [content, setcontent] = useState("");
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const [loading, setloading] = useState(false);
 
@@ -54,13 +56,20 @@ export default function TweetCard({ data }: { data: Dtype }) {
           src={data.author.profileImgUrl}
           alt="Chennai Super Kings"
           className="w-12 h-12 rounded-full"
+          onClick={() => router.push(`/${data.author.username}`)}
         />
         <div className="flex-1">
           <div className="flex items-center gap-2 text-sm">
-            <span className="font-semibold">
+            <span
+              className="font-semibold"
+              onClick={() => router.push(`/${data.author.username}`)}
+            >
               {data.author.firstName} {data.author.lastName}
             </span>
-            <span className="text-gray-500">
+            <span
+              className="text-gray-500"
+              onClick={() => router.push(`/${data.author.username}`)}
+            >
               @{data.author.username} ·{" "}
               {new Date(parseInt(data.createdAt)).toDateString()}
             </span>
@@ -99,37 +108,35 @@ export default function TweetCard({ data }: { data: Dtype }) {
               </div>
             )}
           </div>
-
-          {/* Divider */}
-          <div className="my-5 border-t border-gray-700" />
-          <div className="flex my-4 w-full ">
-            <img
-              src={data.author.profileImgUrl}
-              alt={data.author.profileImgUrl}
-              className="w-10 h-10 rounded-full"
-            />
-            <textarea
-              className="w-full bg-transparent text-xl px-3 focus:outline-none resize-none"
-              placeholder="Post Your Reply"
-              rows={2}
-              value={content}
-              onChange={(e) => setcontent(e.target.value)}
-            />
-            <Button
-              className="px-4 font-bold py-3 rounded-2xl cursor-pointer"
-              onClick={commentTweetHandler}
-            >
-              Reply {loading && <Loader2 className="animate-spin" />}
-            </Button>
-          </div>
-
-          <div className=" border-t border-gray-700" />
-
-          {/* Comments */}
-          <div className="space-y-4 my-5">
-            {data.comments && <CommentsTree comment={data.comments} />}
-          </div>
         </div>
+      </div>
+
+      <div className="my-5 border-t border-gray-700" />
+      <div className="flex my-4 w-full ml-2">
+        <img
+          src={data.author.profileImgUrl}
+          alt={data.author.profileImgUrl}
+          className="w-10 h-10 rounded-full"
+          onClick={() => router.push(`/${data.author.username}`)}
+        />
+        <textarea
+          className="w-full bg-transparent text-xl px-3 focus:outline-none resize-none"
+          placeholder="Post Your Reply"
+          rows={2}
+          value={content}
+          onChange={(e) => setcontent(e.target.value)}
+        />
+        <Button
+          className="px-4 font-bold py-3 rounded-2xl cursor-pointer"
+          onClick={commentTweetHandler}
+        >
+          Reply {loading && <Loader2 className="animate-spin" />}
+        </Button>
+      </div>
+      <div className="mt-5 border-t border-gray-700" />
+
+      <div className="space-y-4 my-5">
+        {data.comments && <CommentsTree comment={data.comments} />}
       </div>
     </div>
   );
