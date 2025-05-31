@@ -31,7 +31,7 @@ const LeftBar = () => {
       items.splice(items.length - 1, 0, {
         title: "Profile",
         icon: <BiUser />,
-        link: `/${currentUser.id}`,
+        link: `/${currentUser.username}`,
       });
     }
 

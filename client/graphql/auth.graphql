@@ -1,5 +1,5 @@
-query verifyUserGoogleToken($token: String!) {
-  verifyGoogleToken(token: $token)
+query verifyUserGoogleToken($token: String!, $username: String!) {
+  verifyGoogleToken(token: $token, username: $username)
 }
 
 query GetCurrentUser {
@@ -8,12 +8,26 @@ query GetCurrentUser {
     email
     firstName
     lastName
+    username
     profileImgUrl
     recommendedUsers {
       firstName
       profileImgUrl
       id
       lastName
+      username
     }
   }
+}
+
+query CheckUsernameQuery($username: String!) {
+  CheckUsername(username: $username)
+}
+
+query checkUserExistQuery($token: String!) {
+  checkUserExist(token: $token)
+}
+
+query loginUserQuery($token: String!) {
+  loginUser(token: $token)
 }

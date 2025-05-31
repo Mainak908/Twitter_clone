@@ -8,12 +8,35 @@ export interface CreateTweetPayload {
   content: string;
   imageURL?: string;
 }
+export interface CommentTweetPayload {
+  content: string;
+  imageURL?: string;
+  parentCommentid: string;
+}
+
 const queries = {
+  getOneTweetDetails: (_: any, { id }: { id: string }) =>
+    prismaClient.tweet.findFirst({
+      where: {
+        id,
+      },
+    }),
+
+  getChildComments: (_: any, { id }: { id: string }) =>
+    prismaClient.tweet.findMany({
+      where: {
+        parentCommentId: id,
+      },
+    }),
+
   getAllTweets: async () => {
     const cachedTweets = await redisClient.get("ALL_TWEETS");
     if (cachedTweets) return JSON.parse(cachedTweets);
 
     const tweets = await prismaClient.tweet.findMany({
+      where: {
+        parentCommentId: null,
+      },
       orderBy: { createdAt: "desc" },
     });
     await redisClient.set("ALL_TWEETS", JSON.stringify(tweets));
@@ -64,6 +87,60 @@ const mutations = {
     await redisClient.del("ALL_TWEETS");
     return tweet;
   },
+
+  LikeTweet: async (
+    parent: any,
+    { id }: { id: string },
+    ctx: GraphqlContext
+  ) => {
+    if (!ctx.user) throw new Error("You are not authenticated");
+
+    await prismaClient.like.create({
+      data: {
+        userId: ctx.user.id,
+        tweetId: id,
+      },
+    });
+
+    return true;
+  },
+
+  disLikeTweet: async (
+    parent: any,
+    { id }: { id: string },
+    ctx: GraphqlContext
+  ) => {
+    if (!ctx.user) throw new Error("You are not authenticated");
+    await prismaClient.like.delete({
+      where: {
+        userId_tweetId: {
+          tweetId: id,
+          userId: ctx.user.id,
+        },
+      },
+    });
+
+    return true;
+  },
+
+  CommentTweet: async (
+    parent: any,
+    { payload }: { payload: CommentTweetPayload },
+    ctx: GraphqlContext
+  ) => {
+    if (!ctx.user) throw new Error("You are not authenticated");
+
+    await prismaClient.tweet.create({
+      data: {
+        content: payload.content,
+        authorId: ctx.user.id,
+        imageURL: payload.imageURL,
+        parentCommentId: payload.parentCommentid,
+      },
+    });
+
+    return true;
+  },
 };
 
 const resolvers = {
@@ -72,6 +149,41 @@ const resolvers = {
       return prismaClient.user.findUnique({
         where: { id: parent.authorId },
       });
+    },
+    comments: async (parent: Tweet) => {
+      return prismaClient.tweet.findMany({
+        where: {
+          parentCommentId: parent.id,
+        },
+      });
+    },
+    LikeCount: (parent: Tweet) =>
+      prismaClient.like.count({
+        where: {
+          tweetId: parent.id,
+        },
+      }),
+    CommentCount: (parent: Tweet) =>
+      prismaClient.tweet.count({
+        where: {
+          parentCommentId: parent.id,
+        },
+      }),
+    isLikedByMe: async (parent: Tweet, _: any, context: GraphqlContext) => {
+      const userId = context.user?.id;
+      console.log("last");
+      if (!userId) return false;
+      console.log("first");
+      const like = await prismaClient.like.findUnique({
+        where: {
+          userId_tweetId: {
+            userId,
+            tweetId: parent.id,
+          },
+        },
+      });
+
+      return Boolean(like);
     },
   },
 };

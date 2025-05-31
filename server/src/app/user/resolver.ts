@@ -28,9 +28,10 @@ interface GoogleTokenResult {
 const queries = {
   verifyGoogleToken: async (
     _: any,
-    { token }: { token: string },
+    { token, username }: { token: string; username: string },
     { res }: { res: Response }
   ) => {
+    // only use this fn to signup user
     const googleToken = token;
     const googleOauthUrl = new URL("https://oauth2.googleapis.com/tokeninfo");
     googleOauthUrl.searchParams.set("id_token", googleToken);
@@ -42,20 +43,67 @@ const queries = {
       }
     );
 
-    let user = await prismaClient.user.findUnique({
+    const user = await prismaClient.user.create({
+      data: {
+        email: data.email,
+        firstName: data.given_name,
+        lastName: data.family_name,
+        profileImgUrl: data.picture,
+        username,
+      },
+    });
+
+    const Usertoken = JWTService.generateTokenForUser(user);
+
+    res.cookie("auth_token", Usertoken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60,
+    });
+
+    return true;
+  },
+  checkUserExist: async (_: any, { token }: { token: string }) => {
+    const googleOauthUrl = new URL("https://oauth2.googleapis.com/tokeninfo");
+    googleOauthUrl.searchParams.set("id_token", token);
+
+    const { data } = await axios.get<GoogleTokenResult>(
+      googleOauthUrl.toString(),
+      {
+        responseType: "json",
+      }
+    );
+
+    const user = await prismaClient.user.findUnique({
       where: { email: data.email },
     });
 
-    if (!user) {
-      user = await prismaClient.user.create({
-        data: {
-          email: data.email,
-          firstName: data.given_name,
-          lastName: data.family_name,
-          profileImgUrl: data.picture,
-        },
-      });
-    }
+    return user != null;
+  },
+
+  loginUser: async (
+    _: any,
+    { token }: { token: string },
+    { res }: { res: Response }
+  ) => {
+    const googleOauthUrl = new URL("https://oauth2.googleapis.com/tokeninfo");
+    googleOauthUrl.searchParams.set("id_token", token);
+
+    const { data } = await axios.get<GoogleTokenResult>(
+      googleOauthUrl.toString(),
+      {
+        responseType: "json",
+      }
+    );
+
+    const user = await prismaClient.user.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
+
+    if (!user) return false;
 
     const Usertoken = JWTService.generateTokenForUser(user);
 
@@ -82,7 +130,17 @@ const queries = {
     { userId }: { userId: string },
     ctx: GraphqlContext
   ) => {
-    return prismaClient.user.findUnique({ where: { id: userId } });
+    return prismaClient.user.findUnique({ where: { username: userId } });
+  },
+
+  CheckUsername: async (_: any, { username }: { username: string }) => {
+    const data = await prismaClient.user.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    return data === null;
   },
 };
 
@@ -90,7 +148,7 @@ const ExtraResolvers = {
   User: {
     tweets: async (parent: User) => {
       const data = await prismaClient.tweet.findMany({
-        where: { authorId: parent.id },
+        where: { authorId: parent.id, parentCommentId: null },
       });
 
       return data;

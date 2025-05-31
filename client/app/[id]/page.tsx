@@ -1,3 +1,4 @@
+"use client";
 import { BsArrowLeftShort } from "react-icons/bs";
 import React from "react";
 import UnfollowBtn from "@/components/UnfollowBtn";
@@ -6,24 +7,30 @@ import {
   GetAllTweetsOfUserQueryDocument,
   GetAllTweetsOfUserQueryQuery,
   GetAllTweetsOfUserQueryQueryVariables,
-  Tweet,
 } from "@/gql/graphql";
 import FeedCard from "@/components/FeedCard";
 import Image from "next/image";
 import LeftBar from "@/components/LeftBar";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 
-const UserProfilePage = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
-  const { id: userId } = await params;
+const UserProfilePage = () => {
+  const { id } = useParams<{ id: string }>();
 
-  const { getUserById } = await graphqlClient.request<
-    GetAllTweetsOfUserQueryQuery,
-    GetAllTweetsOfUserQueryQueryVariables
-  >(GetAllTweetsOfUserQueryDocument, { userId });
+  const fetcherfn = async () => {
+    const { getUserById } = await graphqlClient.request<
+      GetAllTweetsOfUserQueryQuery,
+      GetAllTweetsOfUserQueryQueryVariables
+    >(GetAllTweetsOfUserQueryDocument, { userId: id });
+
+    return getUserById;
+  };
+
+  const { data: getUserById } = useQuery({
+    queryFn: fetcherfn,
+    queryKey: ["myTweets"],
+  });
 
   return (
     <div className=" w-screen flex ">
@@ -31,7 +38,7 @@ const UserProfilePage = async ({
 
       <div className=" border-r-[1px] border-l-[1px]  border-gray-600 mx-auto max-w-[550px]">
         <nav className="flex items-center gap-3 py-3 px-3">
-          <Link href={"/"}>
+          <Link href={"/home"}>
             <BsArrowLeftShort className="text-4xl" />
           </Link>
 
@@ -66,9 +73,9 @@ const UserProfilePage = async ({
           </div>
         </div>
         <div>
-          {getUserById?.tweets?.map((tweet) => (
-            <FeedCard data={tweet as Tweet} key={tweet?.id} />
-          ))}
+          {getUserById?.tweets?.map(
+            (tweet) => tweet && <FeedCard data={tweet} key={tweet?.id} />
+          )}
         </div>
       </div>
     </div>

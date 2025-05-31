@@ -17,6 +17,7 @@ import {
 import { toast } from "react-toastify";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 const TweetSection = () => {
   const { data: user, isLoading } = useLoggedInUser();
@@ -24,7 +25,7 @@ const TweetSection = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState<{ img: File; src: string }>();
   const [loading, setloading] = useState(false);
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   let imageURL: string;
 
@@ -90,7 +91,7 @@ const TweetSection = () => {
     setImage(undefined);
 
     toast.success("success");
-    router.refresh();
+    queryClient.invalidateQueries({ queryKey: ["AllTweets"] });
   }
 
   return (

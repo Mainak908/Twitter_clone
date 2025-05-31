@@ -5,11 +5,24 @@ export const types = `#graphql
         imageURL: String
     }
 
+    input CommentTweetData {
+        content: String!
+        imageURL: String
+        parentCommentid: ID!
+    }
+
     type Tweet {
         id: ID!
         content: String!
         imageURL: String
 
-        author: User
+        author: User!
+        comments: [Tweet]
+        
+        createdAt:String!
+        isLikedByMe: Boolean!
+        LikeCount:Int!
+        CommentCount:Int!
     }
+
 `;

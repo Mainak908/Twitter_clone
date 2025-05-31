@@ -1,3 +1,5 @@
+"use client";
+import { useQuery } from "@tanstack/react-query";
 import FeedCard from "./FeedCard";
 import LeftBar from "./LeftBar";
 import MobileFooter from "./mobileFooter";
@@ -10,11 +12,20 @@ import {
   GetAllTweetsQueryQueryVariables,
 } from "@/gql/graphql";
 
-const Twitterlayout = async () => {
-  const { getAllTweets: Tweets } = await graphqlClient.request<
+const fetcherfn = async () => {
+  const { getAllTweets } = await graphqlClient.request<
     GetAllTweetsQueryQuery,
     GetAllTweetsQueryQueryVariables
   >(GetAllTweetsQueryDocument);
+
+  return getAllTweets;
+};
+
+const Twitterlayout = () => {
+  const { data: Tweets } = useQuery({
+    queryKey: ["AllTweets"],
+    queryFn: fetcherfn,
+  });
 
   return (
     <div className="w-screen flex ">

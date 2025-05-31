@@ -3,11 +3,15 @@ query GetAllTweetsQuery {
     id
     content
     imageURL
+    LikeCount
+    isLikedByMe
+    CommentCount
     author {
       firstName
       lastName
       profileImgUrl
       id
+      username
     }
   }
 }
@@ -20,11 +24,18 @@ query GetAllTweetsOfUserQuery($userId: ID!) {
     profileImgUrl
     id
     tweets {
-      content
       id
+      CommentCount
+      content
+      LikeCount
+      isLikedByMe
       author {
         firstName
         profileImgUrl
+        username
+        username
+        lastName
+        id
       }
     }
     followers {

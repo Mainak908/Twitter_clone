@@ -1,0 +1,45 @@
+mutation LikeTweetMutation($id: ID!) {
+  LikeTweet(id: $id)
+}
+
+mutation disLikeTweetMutation($id: ID!) {
+  disLikeTweet(id: $id)
+}
+
+mutation CommentTweetMutation($payload: CommentTweetData!) {
+  CommentTweet(payload: $payload)
+}
+
+query GetOneTweetDetailsQuery($getOneTweetDetailsId: ID!) {
+  getOneTweetDetails(id: $getOneTweetDetailsId) {
+    author {
+      id
+      firstName
+      lastName
+      username
+      profileImgUrl
+    }
+    LikeCount
+    isLikedByMe
+
+    CommentCount
+    content
+    imageURL
+    createdAt
+    id
+    comments {
+      content
+      id
+      createdAt
+      isLikedByMe
+      CommentCount
+      LikeCount
+      author {
+        username
+        firstName
+        lastName
+        profileImgUrl
+      }
+    }
+  }
+}
