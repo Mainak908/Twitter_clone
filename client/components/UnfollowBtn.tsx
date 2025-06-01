@@ -11,7 +11,7 @@ import {
   UnfollowUserMutationMutationVariables,
 } from "@/gql/graphql";
 import { useLoggedInUser } from "@/hooks/user_check";
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 type TgetUserById = GetAllTweetsOfUserQueryQuery["getUserById"];
 
@@ -21,7 +21,7 @@ const UnfollowBtn = ({ userInfo }: { userInfo: TgetUserById }) => {
     (d) => d?.id === currentUser?.id
   );
 
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const followUnfollow = async () => {
     if (!userInfo) return;
@@ -31,7 +31,8 @@ const UnfollowBtn = ({ userInfo }: { userInfo: TgetUserById }) => {
         UnfollowUserMutationMutation,
         UnfollowUserMutationMutationVariables
       >(UnfollowUserMutationDocument, { to: userInfo.id });
-      if (unfollowUser) router.refresh();
+      if (unfollowUser)
+        queryClient.invalidateQueries({ queryKey: ["myTweets"] });
       return;
     }
 
@@ -39,7 +40,7 @@ const UnfollowBtn = ({ userInfo }: { userInfo: TgetUserById }) => {
       FollowUserMutationMutation,
       FollowUserMutationMutationVariables
     >(FollowUserMutationDocument, { to: userInfo.id });
-    if (followUser) router.refresh();
+    if (followUser) queryClient.invalidateQueries({ queryKey: ["myTweets"] });
   };
   return (
     <>
