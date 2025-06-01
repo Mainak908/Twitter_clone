@@ -15,7 +15,7 @@ import {
   CheckUsernameQueryQueryVariables,
   CheckUsernameQueryDocument,
 } from "@/gql/graphql";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 

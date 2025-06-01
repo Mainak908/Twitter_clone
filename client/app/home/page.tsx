@@ -1,4 +1,5 @@
 "use client";
+import Loader_Comp from "@/components/Loader_Comp";
 import Twitterlayout from "@/components/TwitterLayout";
 import { useLoggedInUser } from "@/hooks/user_check";
 import { useRouter } from "next/navigation";
@@ -16,7 +17,7 @@ const HomePage = () => {
   }, [user, router]);
 
   if (user === undefined) {
-    return <div className="text-white">Loading...</div>;
+    return <Loader_Comp />;
   }
 
   return <Twitterlayout />;

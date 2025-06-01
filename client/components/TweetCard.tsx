@@ -12,7 +12,7 @@ import {
 import { graphqlClient } from "@/clients/api";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { IoIosHeart } from "react-icons/io";
 import { useRouter } from "next/navigation";
 

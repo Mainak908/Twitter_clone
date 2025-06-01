@@ -14,7 +14,7 @@ import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 export default function Home() {
   const [GToken, setGToken] = useState<string>("");

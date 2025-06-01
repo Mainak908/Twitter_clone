@@ -14,9 +14,8 @@ import {
   GetSignedUrlForTweetQueryQuery,
   GetSignedUrlForTweetQueryQueryVariables,
 } from "@/gql/graphql";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 
 const TweetSection = () => {

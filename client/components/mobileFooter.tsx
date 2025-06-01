@@ -2,7 +2,7 @@
 import { useLoggedInUser } from "@/hooks/user_check";
 import { useRouter } from "next/navigation";
 import { FaHome, FaSearch, FaPlus, FaBell, FaUser } from "react-icons/fa";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 export default function MobileFooter() {
   const { data: currentUser } = useLoggedInUser();

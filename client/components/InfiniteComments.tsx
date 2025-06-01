@@ -15,7 +15,6 @@ import { Heart, MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoIosHeart } from "react-icons/io";
-import { toast } from "react-toastify";
 
 type Dtype = NonNullable<
   NonNullable<GetOneTweetDetailsQueryQuery["getOneTweetDetails"]>["comments"]

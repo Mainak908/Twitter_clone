@@ -1,6 +1,7 @@
 "use client";
 import { graphqlClient } from "@/clients/api";
 import LeftBar from "@/components/LeftBar";
+import Loader_Comp from "@/components/Loader_Comp";
 import TweetCard from "@/components/TweetCard";
 import {
   GetOneTweetDetailsQueryDocument,
@@ -21,11 +22,11 @@ const Page = () => {
     return getOneTweetDetails;
   };
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryFn: fetcherfn,
     queryKey: ["oneTweet"],
   });
-
+  if (isLoading) return <Loader_Comp />;
   return (
     <div className="w-screen flex ">
       <LeftBar />

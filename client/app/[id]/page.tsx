@@ -14,6 +14,7 @@ import LeftBar from "@/components/LeftBar";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import Loader_Comp from "@/components/Loader_Comp";
 
 const UserProfilePage = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,11 +28,11 @@ const UserProfilePage = () => {
     return getUserById;
   };
 
-  const { data: getUserById } = useQuery({
+  const { data: getUserById, isLoading } = useQuery({
     queryFn: fetcherfn,
     queryKey: ["myTweets"],
   });
-
+  if (isLoading) return <Loader_Comp />;
   return (
     <div className=" w-screen flex ">
       <LeftBar />

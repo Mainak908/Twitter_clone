@@ -12,6 +12,9 @@ import {
 } from "@/gql/graphql";
 import { useLoggedInUser } from "@/hooks/user_check";
 import { useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { Button } from "./ui/button";
 
 type TgetUserById = GetAllTweetsOfUserQueryQuery["getUserById"];
 
@@ -20,10 +23,12 @@ const UnfollowBtn = ({ userInfo }: { userInfo: TgetUserById }) => {
   const IsAFollower = userInfo?.followers?.find(
     (d) => d?.id === currentUser?.id
   );
+  const [loading, setloading] = useState(false);
 
   const queryClient = useQueryClient();
 
   const followUnfollow = async () => {
+    setloading(true);
     if (!userInfo) return;
 
     if (IsAFollower) {
@@ -33,6 +38,7 @@ const UnfollowBtn = ({ userInfo }: { userInfo: TgetUserById }) => {
       >(UnfollowUserMutationDocument, { to: userInfo.id });
       if (unfollowUser)
         queryClient.invalidateQueries({ queryKey: ["myTweets"] });
+      setloading(false);
       return;
     }
 
@@ -41,16 +47,18 @@ const UnfollowBtn = ({ userInfo }: { userInfo: TgetUserById }) => {
       FollowUserMutationMutationVariables
     >(FollowUserMutationDocument, { to: userInfo.id });
     if (followUser) queryClient.invalidateQueries({ queryKey: ["myTweets"] });
+    setloading(false);
   };
   return (
     <>
       {currentUser?.id !== userInfo?.id && (
-        <button
+        <Button
           className="bg-white text-black px-3 py-1 rounded-full text-sm cursor-pointer"
           onClick={followUnfollow}
         >
           {IsAFollower ? "Unfollow" : "follow"}
-        </button>
+          {loading && <Loader2 className="animate-spin" />}
+        </Button>
       )}
     </>
   );
