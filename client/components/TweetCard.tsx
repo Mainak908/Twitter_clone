@@ -43,7 +43,7 @@ export default function TweetCard({ data }: { data: Dtype }) {
     setcontent("");
     if (CommentTweet) {
       queryClient.invalidateQueries({ queryKey: ["oneTweet"] });
-      toast("success");
+      toast.success("success");
     }
   };
   const dislikehandler = () => {};

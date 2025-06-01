@@ -9,7 +9,7 @@ export default function MobileFooter() {
   const router = useRouter();
 
   const redirectfn = () => {
-    if (!currentUser) return toast("login first");
+    if (!currentUser) return toast.error("login first");
     router.push(`${currentUser.username}`);
   };
   return (

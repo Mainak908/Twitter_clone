@@ -39,13 +39,12 @@ export default function Home() {
         LoginUserQueryQuery,
         LoginUserQueryQueryVariables
       >(LoginUserQueryDocument, { token: googleToken });
-      toast(loginUser ? "success" : "failed");
 
       if (loginUser) {
+        toast.success("success");
         queryClient.invalidateQueries({ queryKey: ["me"] });
         router.push("/home");
-      }
-
+      } else toast.error("failed");
       return;
     }
 

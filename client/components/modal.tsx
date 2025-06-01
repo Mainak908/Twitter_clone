@@ -64,11 +64,11 @@ export default function UsernameModal({
       VerifyUserGoogleTokenQueryVariables
     >(VerifyUserGoogleTokenDocument, { token: googleToken, username });
 
-    toast(verifyGoogleToken ? "success" : "failed");
     if (verifyGoogleToken) {
+      toast.success("success");
       queryClient.invalidateQueries({ queryKey: ["me"] });
       router.push("/home");
-    }
+    } else toast.error("error");
   };
 
   return (
