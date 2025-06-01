@@ -9,11 +9,12 @@ import {
   LoginUserQueryQuery,
   LoginUserQueryQueryVariables,
 } from "@/gql/graphql";
+import { useLoggedInUser } from "@/hooks/user_check";
 
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function Home() {
@@ -21,6 +22,15 @@ export default function Home() {
   const queryClient = useQueryClient();
   const [modal, setmodal] = useState(false);
   const router = useRouter();
+
+  const { data: loggedInUser, isLoading } = useLoggedInUser();
+
+  useEffect(() => {
+    if (!isLoading && loggedInUser) {
+      router.push("/home");
+    }
+  }, [loggedInUser, isLoading, router]);
+
   const HandleLoginPre = async (cred: CredentialResponse) => {
     const googleToken = cred.credential;
     if (!googleToken) {
