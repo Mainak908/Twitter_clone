@@ -15,6 +15,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { IoIosHeart } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import { useLoggedInUser } from "@/hooks/user_check";
 
 type Dtype = GetOneTweetDetailsQueryQuery["getOneTweetDetails"];
 
@@ -22,6 +23,7 @@ export default function TweetCard({ data }: { data: Dtype }) {
   const [content, setcontent] = useState("");
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { data: user } = useLoggedInUser();
 
   const [loading, setloading] = useState(false);
 
@@ -114,10 +116,10 @@ export default function TweetCard({ data }: { data: Dtype }) {
       <div className="my-5 border-t border-gray-700" />
       <div className="flex my-4 w-full ml-2">
         <img
-          src={data.author.profileImgUrl}
-          alt={data.author.profileImgUrl}
+          src={user?.profileImgUrl}
+          alt={""}
           className="w-10 h-10 rounded-full"
-          onClick={() => router.push(`/${data.author.username}`)}
+          onClick={() => router.push(`/${user?.username}`)}
         />
         <textarea
           className="w-full bg-transparent text-xl px-3 focus:outline-none resize-none"
